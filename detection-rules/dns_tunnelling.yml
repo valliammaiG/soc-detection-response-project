@@ -1,0 +1,25 @@
+title: Possible DNS Tunnelling via High-Entropy Subdomains
+id: a1e2c3d4-0002-4a1b-9c3d-000000000002
+status: experimental
+description: >
+  Detects domains receiving an abnormally high volume of DNS queries with
+  long, high-entropy subdomains and TXT/NULL record types, indicative of
+  DNS tunnelling used for covert data exfiltration or C2.
+author: Valliammai G
+date: 2026/08/26
+logsource:
+  category: dns
+detection:
+  selection:
+    QueryType:
+      - TXT
+      - NULL
+  timeframe: 10m
+  condition: selection | count() by query_name_root > 100 and avg(subdomain_length) > 40
+falsepositives:
+  - Legitimate high-volume DNS consumers (CDN health checks, SPF/DKIM lookups)
+level: high
+tags:
+  - attack.exfiltration
+  - attack.t1048.001
+  - attack.command_and_control

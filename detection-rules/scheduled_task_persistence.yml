@@ -1,0 +1,22 @@
+title: Suspicious Scheduled Task Creation for Persistence
+id: a1e2c3d4-0004-4a1b-9c3d-000000000004
+status: experimental
+description: >
+  Detects creation of a scheduled task that executes PowerShell, a common
+  persistence mechanism used after initial compromise.
+author: Valliammai G
+date: 2026/08/26
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4698
+    TaskContent|contains: 'powershell'
+  condition: selection
+falsepositives:
+  - Legitimate administrative scheduled tasks that invoke PowerShell scripts
+level: medium
+tags:
+  - attack.persistence
+  - attack.t1053.005
